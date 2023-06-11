@@ -1,11 +1,16 @@
 package com.SpringRest;
 
 import org.springframework.stereotype.Service;
+import org.springframework.util.ReflectionUtils;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+
+import static org.springframework.util.ReflectionUtils.findField;
 
 @Service
 public class HospitalService {
@@ -67,5 +72,16 @@ public class HospitalService {
         Hospital oldHospital = hospitalList.stream().filter(h -> h.getName().equals(name)).findFirst().get();
         oldHospital.setRating(newHospital.getRating());
         return oldHospital;
+    }
+
+    public Hospital partialDataUpdate(Map<String, Object> fields, int id) {
+        Hospital existingHospital = hospitalList.stream().filter(h -> h.getId()==id).findFirst().get();
+         fields.forEach((key,value) ->{
+            Field field = ReflectionUtils.findField(Hospital.class,key);
+            field.setAccessible(true);
+            ReflectionUtils.setField(field, existingHospital,value);
+        });
+
+        return existingHospital;
     }
 }

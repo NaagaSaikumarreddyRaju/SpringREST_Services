@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class HospitalController {
@@ -56,4 +57,10 @@ public class HospitalController {
     public Hospital updateHospitalByName(@RequestBody Hospital newHospital,@PathVariable("name") String name){
         return hospitalService.updateHospitalByName(newHospital,name);
     }
+
+    @PatchMapping("/partialUpdate/{id}")
+    public Hospital partialDataUpdate(@RequestBody Map<String, Object> fields,@PathVariable("id") int id){
+        return hospitalService.partialDataUpdate(fields,id);
+    }
+
 }
